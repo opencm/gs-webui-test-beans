@@ -1,0 +1,6 @@
+/.idea
+/target
+/beans/beans.iml
+/beans/target
+/*.iml
+/chromedriver.log
