@@ -2,14 +2,20 @@ package webui.tests.cloudify.commands;
 
 import org.apache.commons.collections.Closure;
 import org.apache.commons.exec.*;
+import org.apache.commons.exec.Executor;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import webui.tests.exec.ExecutorFactory;
 import webui.tests.utils.CollectionUtils;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: guym
@@ -24,6 +30,9 @@ public class CloudifyCliManager {
     String cliHomedir = System.getProperty( "JSHOMEDIR", System.getenv( "JSHOMEDIR" ) ) + File.separator + "tools" + File.separator + "cli";
 
     long defaultTimeoutMillis = 120000; // 2 minutes
+
+    @Autowired
+    private ExecutorFactory executorFactory;
 
     private static Logger logger = LoggerFactory.getLogger( CloudifyCliManager.class );
 
@@ -86,24 +95,28 @@ public class CloudifyCliManager {
     }
 
     public Execution execute( String command , long timeout ) {
+        CommandLine cmdLine = new CommandLine( new File( cliHomedir, "cloudify" + ( SystemUtils.IS_OS_WINDOWS ? ".bat" : ".sh" ) ) );
+        cmdLine.addArguments( command, false );
 
-        logger.info( "running command [{}]", command );
-        CommandLine cmdLine = new CommandLine( cliHomedir );
-        cmdLine.addArguments( command );
+//        CommandLine cmdLine = new CommandLine( "echo hello" );
+        logger.info( "running command [{}]", cmdLine.toString() );
 
-        DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-
-        DefaultExecutor executor = new DefaultExecutor();
-        ExecuteWatchdog watchdog = new ExecuteWatchdog( timeout );
-        executor.setExitValue( 1 );
-        executor.setWatchdog( watchdog );
-        MyStreamHandler streamHandler = new MyStreamHandler();
-
+        Executor executor = executorFactory.createNew();
+        executor.setExitValue( 0 );
+        MyStreamHandler streamHandler = new MyStreamHandler( );
         executor.setStreamHandler( streamHandler );
 
         try
         {
-            executor.execute( cmdLine, null, resultHandler );
+
+            Map<String, String> env = new HashMap<String,String>(  );
+            env.put( "DEBUG", "true" );
+            env.put( "VERBOSE", "true" );
+            env.putAll( System.getenv() );
+            int i = executor.execute( cmdLine, env );
+            logger.info( "executor finished with : " + i );
+
+
         } catch ( ExecuteException e )
         {
             logger.error( "Failed to execute process. Exit value: " + e.getExitValue(), e );
@@ -115,7 +128,7 @@ public class CloudifyCliManager {
 
             throw new RuntimeException( "Failed to execute process.", e );
         }
-        return new Execution().setStreamHandler( streamHandler );
+        return null; // new Execution().setStreamHandler( streamHandler );
     }
 
 
@@ -132,24 +145,108 @@ public class CloudifyCliManager {
            }
        }
 
+//    public static class MyCallable implements Callable<String>{
+//
+//        private OutputStream os;
+//        private InputStream is;
+////        private BufferedReader reader;
+//
+//
+//
+//        public MyCallable( OutputStream os, InputStream is ) {
+//            this.os = os;
+//            this.is = is;
+//        }
+//
+//        @Override
+//        public String call() throws Exception {
+////            String line = reader.readLine();
+//            os.write( is.read(  ) );
+//            return "line";
+//        }
+//    }
 
+
+    // guym - urrrggh. there's an issue with cloudify's CLI when running bootstrap command
+    // for some reason, the input stream remains open, blocked on "read" while the process has finished.
+    // adding a work around - wrapping the result in Future.
+    // I will "kill" the streamers when the process is done manually.
+//    public static class MyStreamPumper implements Runnable{
+//
+//        private final MyStreamHandler myStreamHandler;
+//        private static Logger logger = LoggerFactory.getLogger(MyStreamPumper.class);
+//        private InputStream is;
+//        private OutputStream os;
+//
+//        public MyStreamPumper( InputStream is, OutputStream os, MyStreamHandler myStreamHandler ) {
+//            this.is = is;
+//            this.os = os;
+//            this.myStreamHandler = myStreamHandler;
+//        }
+//
+//        @Override
+//        public void run() {
+//            logger.info( "pumper running : " + Thread.currentThread().getName() );
+//            try
+//            {
+//                int i = 0;
+//                while ( ( i = is.read() ) > 0 ){
+//                    os.write( i );
+//                }
+//            } catch ( IOException e )
+//            {
+//                logger.error( "error while reading process output",e );
+//            }
+//        }
+//    }
+
+
+    protected static class MyStreamOutputHandler extends LogOutputStream {
+        private StringBuilder sb;
+        private Logger logger;
+
+        public MyStreamOutputHandler( String name ) {
+            logger = LoggerFactory.getLogger( name );
+        }
+
+        @Override
+        protected void processLine( String line, int level ) {
+            logger.info( line ); // currently ignoring level. todo: use level;
+            sb.append( line );
+        }
+
+        public String getOutput(){
+            return sb.toString();
+        }
+
+        public MyStreamOutputHandler setSb( StringBuilder sb ) {
+            this.sb = sb;
+            return this;
+        }
+    }
        protected static class MyStreamHandler extends PumpStreamHandler {
 
-           final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+           StringBuilder sb = new StringBuilder(  );
+
+
+           public MyStreamHandler(  ) {
+
+           }
 
            @Override
            protected void createProcessOutputPump( InputStream is, OutputStream os ) {
-               super.createProcessOutputPump( is, baos );
+               super.createProcessOutputPump( is, new MyStreamOutputHandler( "cli-info " ).setSb( sb ) );
            }
 
            @Override
            protected void createProcessErrorPump( InputStream is, OutputStream os ) {
-               super.createProcessErrorPump( is, baos );
+               super.createProcessErrorPump( is, new MyStreamOutputHandler("cli-error").setSb( sb ) );
            }
 
            public String getOutput() {
-               return baos.toString();
+               return sb.toString();
            }
+
        }
 
     public static class Accumulator extends CloudifyCliManager{
@@ -184,7 +281,9 @@ public class CloudifyCliManager {
                 }
             } );
 
-            return super.execute( StringUtils.join(commands,";"), timeout );
+            commands.add( command.getCommandAsString() ); // add the currently executing command
+
+            return cloudifyCliManager.execute( StringUtils.join( commands, ";" ), timeout );
         }
     }
 //
@@ -267,4 +366,8 @@ public class CloudifyCliManager {
 //
 //
 
+
+    public void setExecutorFactory( ExecutorFactory executorFactory ) {
+        this.executorFactory = executorFactory;
+    }
 }

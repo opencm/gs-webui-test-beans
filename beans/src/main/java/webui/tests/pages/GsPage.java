@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public abstract class GsPage<T extends GsPage> {
 
+    public static final int DEFAULT_TIMEOUT = 120000;
     private static Logger logger = LoggerFactory.getLogger( GsPage.class );
 
     protected static StopWatch stopWatch = new Slf4JStopWatch( logger );
@@ -125,7 +126,7 @@ public abstract class GsPage<T extends GsPage> {
     }
 
     protected <T extends WebElement> T waitForElement( T element ) {
-        waitForElement( 30000, TimeUnit.MILLISECONDS, visibilityOf( element ) );
+        waitForElement( DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS, visibilityOf( element ) );
         return element;
     }
 
@@ -163,7 +164,7 @@ public abstract class GsPage<T extends GsPage> {
      * </p>
      */
     protected T waitForAll() {
-        waitForAll( 30000, TimeUnit.MILLISECONDS );
+        waitForAll( DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS );
         return ( T ) this;
     }
 
@@ -197,7 +198,7 @@ public abstract class GsPage<T extends GsPage> {
     }
 
     protected void waitFor( final WebElement... webElements ) {
-        waitFor( 30000, TimeUnit.MILLISECONDS, webElements );
+        waitFor( DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS, webElements );
     }
 
     /**

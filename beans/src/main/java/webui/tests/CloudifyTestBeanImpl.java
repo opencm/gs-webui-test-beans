@@ -37,18 +37,13 @@ public class CloudifyTestBeanImpl implements CloudifyTestBean {
     @Override
     public CloudifyCliManager.Execution teardown() {
         logger.info( "cloudify bean teardown" );
-        Connect details = cloudifyCliManager.connect().details( connectFlags );
-
-        CloudifyCliManager cloudifyCliManager1 = details.andThen();
-        return cloudifyCliManager1.teardown().details( teardownFlags ).execute();
-//        return cloudifyCliManager.connect().details( connectFlags ).andThen().teardown().details( teardownFlags ).execute();
+        return cloudifyCliManager.connect().details( connectFlags ).andThen().teardown().details( teardownFlags ).execute();
     }
 
     @Override
     public CloudifyCliManager.Execution bootstrap() {
         logger.info( "cloudify bean bootstrapping" );
         return cloudifyCliManager.bootstrap().details( bootstrapFlags ).execute();
-
     }
 
 

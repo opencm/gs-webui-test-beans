@@ -7,6 +7,10 @@ package webui.tests.cloudify.commands;
  */
 public class Connect extends CloudifyCommand<Connect>{
 
+    public Connect() {
+        arg( "connect" );
+    }
+
     public Connect user( String user ){
         return arg( "-user",user );
     }
@@ -22,11 +26,11 @@ public class Connect extends CloudifyCommand<Connect>{
     public static class Details extends CloudifyCommand.Details<Connect>{
         private String user;
         private String password;
-        private String restUrl;
+        private String restUrl = "http://127.0.0.1:8100";
 
         @Override
         public Connect populate( Connect connect ) {
-            return connect._if( user ).arg( user )._if( password ).arg( password )._if( restUrl ).arg( restUrl );
+            return connect._if( user ).user( user )._if( password ).password( password )._if( restUrl ).restUrl( restUrl );
         }
 
         public Details setUser( String user ) {

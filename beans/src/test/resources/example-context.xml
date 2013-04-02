@@ -6,13 +6,15 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <import resource="cloudify-mocks.xml"/>
+    <import resource="cloudify-context.xml"/>
 
 
+    <bean id="executorFactory" class="webui.tests.exec.ExecutorFactory"/>
     <bean id="driverFactory" class="webui.tests.SeleniumDriverFactory" init-method="init" destroy-method="quit" >
-        <!-- <property name="driverTypeString" value="#{systemProperties['selenium.browser']?: 'chrome'}"/>-->
-        <property name="driverType" value="CHROME_GWT_DEV"/>
-        <property name="rootUrl" value="http://localhost:8888/"/>
+         <!--<property name="driverTypeString" value="#{systemProperties['selenium.browser']?: 'chrome'}"/>-->
+        <!--<property name="driverType" value="CHROME_GWT_DEV"/>-->
+        <!--<property name="rootUrl" value="http://localhost:8888/"/>-->
+
     </bean>
 
     <bean id="rootUrl" class="java.lang.String">
@@ -23,7 +25,7 @@
     <bean id="selenium" class="com.thoughtworks.selenium.Selenium" factory-bean="driverFactory" factory-method="getSelenium"/>
 
     <bean id="licenseTestConf" class="webui.tests.LicenseTest$LicenseTestConf">
-        <property name="aboutText" value="xap"/>
+        <property name="aboutText" value="cloudify"/>
     </bean>
 
     <context:component-scan base-package="webui.tests"/>
