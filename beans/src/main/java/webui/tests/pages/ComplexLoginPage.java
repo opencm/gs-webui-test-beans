@@ -1,6 +1,5 @@
 package webui.tests.pages;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
@@ -9,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import webui.tests.annotations.OnLoad;
+import webui.tests.components.FirstDisplayed;
+import webui.tests.components.LoginForm;
 
 import java.util.List;
 
@@ -22,9 +23,7 @@ import java.util.List;
  *
  */
 @Component
-public class LoginPage extends GsPage<ComplexLoginPage>{
-
-
+public class ComplexLoginPage extends GsPage<ComplexLoginPage>{
 
     @Autowired
     private DashboardPage dashboardPage;
@@ -35,28 +34,19 @@ public class LoginPage extends GsPage<ComplexLoginPage>{
     private static Logger logger = LoggerFactory.getLogger( ComplexLoginPage.class );
 
     @Bean
-    public LoginPage loginPage(){
-        return new LoginPage();
+    public ComplexLoginPage complexLoginPage(){
+        return new ComplexLoginPage();
     }
 
-    @OnLoad
-      @FindBy(css = "#username-input, input[name='username']")
-      private List<WebElement> usernameInput;
+    @FirstDisplayed
+    @FindBy(css="div.form-area, div.gs-login-panel")
+    private LoginForm loginForm;
 
     @OnLoad
     @FindBy(css = "body")
     private WebElement body;
 
-      @OnLoad
-      @FindBy(css = "#password-input, input[name='password']")
-      private List<WebElement> passwordInput;
-
-      @OnLoad
-      @FindBy(css = "#login_button button, input[type='submit']")
-      private List<WebElement> submit;
-
-
-    public LoginPage gotoPage(){
+    public ComplexLoginPage gotoPage(){
         webDriver.get( rootUrl );
         load();
         return this;
@@ -84,17 +74,8 @@ public class LoginPage extends GsPage<ComplexLoginPage>{
     public DashboardPage login( String username, String password ) {
           logger.info( String.format( "logging in with %s, %s", username, password ) );
 
-          if ( !StringUtils.isEmpty( username ) )
-          {
-              getVisible( usernameInput ).sendKeys( username );
-              logger.info( "typed username" );
-          }
-          if ( !StringUtils.isEmpty( password ) )
-                {
-                    getVisible( passwordInput ).sendKeys( password );
-                    logger.info( "typed password" );
-                }
-          getVisible( submit ).click();
+
+          loginForm.username( username ).password( password ).submit();
           return dashboardPage.load();
       }
 }

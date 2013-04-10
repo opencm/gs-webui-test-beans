@@ -7,7 +7,11 @@
 
     <bean id="cloudifyBean" class="webui.tests.CloudifyTestBeanImpl"/>
     <bean id="cloudifyCliManager" class="webui.tests.cloudify.commands.CloudifyCliManager"/>
-    <bean id="bootstrapFlags" class="webui.tests.cloudify.commands.Bootstrap$Details"/>
+
+
+
+    <bean id="bootstrapFlags" class="webui.tests.cloudify.commands.Bootstrap$Details"></bean>
+
     <bean id="connectDetails" class="webui.tests.cloudify.commands.Connect$Details"/>
     <bean id="teardownDetails" class="webui.tests.cloudify.commands.Teardown$Details"/>
     <bean id="cloudDetails" class="webui.tests.CloudDetails"/>

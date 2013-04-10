@@ -1,15 +1,11 @@
 package webui.tests.pages;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import webui.tests.annotations.OnLoad;
-
-import java.util.Collection;
 
 /**
  * User: guym
@@ -24,7 +20,7 @@ public class DashboardPage extends GsPage<DashboardPage> {
     private WebElement aboutButton;
 
     @Autowired
-    private LoginPage loginPage;
+    private ComplexLoginPage loginPage;
 
     @OnLoad
     @FindBy(css="#gs-logout-button")
@@ -44,14 +40,14 @@ public class DashboardPage extends GsPage<DashboardPage> {
         return this;
     }
 
-    public LoginPage logout(){
+    public ComplexLoginPage logout(){
         logoutButton.click();
         closeDialog( "yes" );
         return loginPage.load();
     }
 
 
-    public void setLoginPage( LoginPage loginPage ) {
+    public void setLoginPage( ComplexLoginPage loginPage ) {
         this.loginPage = loginPage;
     }
 }

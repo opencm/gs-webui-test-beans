@@ -47,6 +47,8 @@ public class SeleniumDriverFactory{
     private String rootUrl = "http://localhost:8099";
 
 
+    private ChromeDriverService chromeService = null;
+
     public void setDriverType( DriverType driverType ) {
         this.driverType = driverType;
     }
@@ -69,7 +71,7 @@ public class SeleniumDriverFactory{
                     desired.setCapability( "chrome.switches", Arrays.asList( "--start-maximized" ) );
                     desired.setCapability( ChromeOptions.CAPABILITY, options ); // add the gwt dev plugin
 
-                    ChromeDriverService chromeService = new ChromeDriverService.Builder().usingAnyFreePort().usingDriverExecutable( getResourceLocation( chromeDriverPath ) ).build();
+                    chromeService = new ChromeDriverService.Builder().usingAnyFreePort().usingDriverExecutable( getResourceLocation( chromeDriverPath ) ).build();
                     logger.info( "Starting Chrome Driver Server..." );
                     chromeService.start();
                     webDriver = new RemoteWebDriver( chromeService.getUrl(), desired );
@@ -86,7 +88,7 @@ public class SeleniumDriverFactory{
                 {
                     DesiredCapabilities desired = DesiredCapabilities.chrome();
                     desired.setCapability( "chrome.switches", Arrays.asList( "--start-maximized" ) );
-                    ChromeDriverService chromeService = new ChromeDriverService.Builder().usingAnyFreePort().usingDriverExecutable( getResourceLocation( chromeDriverPath ) ).build();
+                    chromeService = new ChromeDriverService.Builder().usingAnyFreePort().usingDriverExecutable( getResourceLocation( chromeDriverPath ) ).build();
                     logger.info( "Starting Chrome Driver Server..." );
                     chromeService.start();
                     webDriver = new RemoteWebDriver( chromeService.getUrl(), desired );
@@ -162,7 +164,7 @@ public class SeleniumDriverFactory{
             throw new RuntimeException();
         }
 
-        new WebDriverBackedSelenium( webDriver, rootUrl );
+        selenium = new WebDriverBackedSelenium( webDriver, rootUrl );
     }
 
     public WebDriver getDriver() {
@@ -170,8 +172,34 @@ public class SeleniumDriverFactory{
     }
 
     public void quit(){
-        webDriver.quit();
-        selenium.close();
+        logger.info("destroying driver");
+        try
+        {
+            selenium.close();
+        } catch ( Exception e )
+        {
+            logger.info( "error while closing selenium", e );
+        }
+        try
+        {
+            webDriver.quit();
+        } catch ( Exception e )
+        {
+            logger.info( "error while closing webdriver", e );
+        }
+
+
+        try
+        {
+            if ( chromeService != null )
+            {
+                chromeService.stop();
+                logger.info( "chrome service is still running [{}] ", chromeService.isRunning() );
+            }
+        } catch ( Exception e )
+        {
+            logger.info( "error while closing chromeService", e );
+        }
     }
 
     public Selenium getSelenium() {

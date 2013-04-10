@@ -1,9 +1,6 @@
 package webui.tests;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import webui.tests.pages.DashboardPage;
+import webui.tests.pages.ComplexLoginPage;
 import webui.tests.pages.LoginPage;
 import webui.tests.utils.CollectionUtils;
 
@@ -27,6 +25,10 @@ public class LicenseTest {
 
     @Autowired
     private LoginPage loginPage;
+
+
+    @Autowired
+    private ComplexLoginPage complexLoginPage;
 
     @Autowired
     private CloudifyTestBean cloudifyManager;
@@ -46,6 +48,16 @@ public class LicenseTest {
         cloudifyManager.teardown();
     }
 
+    @Test
+    public void complexLicenseTest(){
+        logger.info( "license test" );
+        DashboardPage dashboard = complexLoginPage.gotoPage().login( licenseTestConf.username, licenseTestConf.password );
+        dashboard.getAboutButton().click();
+        Assert.assertTrue( String.format( "expecting to see %s in popup with text [%s]", licenseTestConf.aboutText, CollectionUtils.first( dashboard.findDisplayedWindowDialogs() ).getText() ), dashboard.isTextInPopup( licenseTestConf.aboutText ) );
+        dashboard.closeDialog( "OK" ).clickLogout().closeDialog( "yes" );
+        loginPage.load();
+        Assert.assertTrue( "We are now in login page. We should see welcome message", loginPage.isLoginWelcomeMessageVisible() );
+    }
 
     @Test
     public void licenseTest(){
