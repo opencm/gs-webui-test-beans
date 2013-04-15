@@ -48,7 +48,7 @@ public class LicenseTest {
         cloudifyManager.teardown();
     }
 
-    @Test
+    @Ignore
     public void complexLicenseTest(){
         logger.info( "license test" );
         DashboardPage dashboard = complexLoginPage.gotoPage().login( licenseTestConf.username, licenseTestConf.password );
@@ -59,7 +59,7 @@ public class LicenseTest {
         Assert.assertTrue( "We are now in login page. We should see welcome message", loginPage.isLoginWelcomeMessageVisible() );
     }
 
-    @Test
+    @Ignore
     public void licenseTest(){
         logger.info( "license test" );
         DashboardPage dashboard = loginPage.gotoPage().login( licenseTestConf.username, licenseTestConf.password );
@@ -70,6 +70,11 @@ public class LicenseTest {
        Assert.assertTrue( "We are now in login page. We should see welcome message",loginPage.isLoginWelcomeMessageVisible() );
 
 
+    }
+
+    @Test
+    public void failedTest(){
+        throw new RuntimeException( "I am failing!" );
     }
 
     public static class LicenseTestConf{

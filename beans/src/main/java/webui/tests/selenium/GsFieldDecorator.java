@@ -1,6 +1,7 @@
 package webui.tests.selenium;
 
 import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,9 @@ import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.DefaultFieldDecorator;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
 import org.openqa.selenium.support.pagefactory.FieldDecorator;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import webui.tests.components.FirstDisplayed;
 
 import java.lang.reflect.Field;
@@ -20,12 +24,13 @@ import java.util.Collection;
  * Date: 4/8/13
  * Time: 5:18 PM
  */
-public class GsFieldDecorator implements FieldDecorator {
+public class GsFieldDecorator implements FieldDecorator, ApplicationContextAware {
 
     final DefaultFieldDecorator defaultFieldDecorator;
 
     final SearchContext searchContext;
     private final WebDriver webDriver;
+    private ApplicationContext applicationContext = null;
 
 
     public GsFieldDecorator( SearchContext searchContext, WebDriver webDriver ) {
@@ -73,5 +78,10 @@ public class GsFieldDecorator implements FieldDecorator {
 
     private ElementLocator getLocator( Field field ) {
         return new DefaultElementLocatorFactory( searchContext ).createLocator( field );
+    }
+
+    @Override
+    public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }
