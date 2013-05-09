@@ -10,6 +10,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
@@ -35,7 +36,8 @@ public class SeleniumDriverFactory{
     private String gwtChromeDevCrx = "classpath:webui/chrome_gwt_1_0_11357.crx";
 
     public static enum DriverType {
-        CHROME, FIREFOX, IE, FIREFOX_GWT_DEV, CHROME_GWT_DEV
+        CHROME, FIREFOX, IE, FIREFOX_GWT_DEV, CHROME_GWT_DEV, SAFARI;
+        // SAFARI_GWT_DEV // need a mac to run this one
     }
 
     private DriverType driverType = DriverType.CHROME;
@@ -60,6 +62,11 @@ public class SeleniumDriverFactory{
     public void initializeDriver() {
         switch ( driverType )
         {
+            case SAFARI :
+            {
+                webDriver = new SafariDriver(  );
+                break;
+            }
             case CHROME_GWT_DEV:
             {
                 try
