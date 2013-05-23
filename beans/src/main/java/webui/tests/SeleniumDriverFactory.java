@@ -14,6 +14,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
+import webui.tests.selenium.GsHtmlUnitDriver;
 
 import java.io.File;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class SeleniumDriverFactory{
     private String gwtChromeDevCrx = "classpath:webui/chrome_gwt_1_0_11357.crx";
 
     public static enum DriverType {
-        CHROME, FIREFOX, IE, FIREFOX_GWT_DEV, CHROME_GWT_DEV, SAFARI;
+        CHROME, FIREFOX, IE, FIREFOX_GWT_DEV, CHROME_GWT_DEV, SAFARI, HTMLUNIT;
         // SAFARI_GWT_DEV // need a mac to run this one
     }
 
@@ -132,6 +133,10 @@ public class SeleniumDriverFactory{
                 webDriver = new InternetExplorerDriver( desired );
                 break;
             }
+            case HTMLUNIT:
+            {
+                webDriver = new GsHtmlUnitDriver( );
+            }
 
         }
     }
@@ -225,5 +230,15 @@ public class SeleniumDriverFactory{
         return rootUrl;
     }
 
+    public void setChromeDriverPath( String chromeDriverPath ) {
+        this.chromeDriverPath = chromeDriverPath;
+    }
 
+    public void setGwtFirefoxDevXpi( String gwtFirefoxDevXpi ) {
+        this.gwtFirefoxDevXpi = gwtFirefoxDevXpi;
+    }
+
+    public void setGwtChromeDevCrx( String gwtChromeDevCrx ) {
+        this.gwtChromeDevCrx = gwtChromeDevCrx;
+    }
 }
