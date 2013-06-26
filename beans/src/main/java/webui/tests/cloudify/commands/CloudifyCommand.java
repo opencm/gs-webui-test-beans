@@ -79,7 +79,7 @@ public abstract class CloudifyCommand<T extends CloudifyCommand> {
         return result ? getOrig() : getFake();
     }
 
-    private T getOrig(){
+    T getOrig(){
         return orig == null ? ( T ) this : orig;
     }
 

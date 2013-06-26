@@ -1,7 +1,6 @@
 package webui.tests.selenium;
 
 import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;

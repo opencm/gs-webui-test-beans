@@ -66,7 +66,14 @@ public class AbstractComponent<T extends AbstractComponent> implements GsSeleniu
             @Override
             public void doWith( Field field ) throws IllegalArgumentException, IllegalAccessException {
                 field.setAccessible( true );
+                logger.debug("loading field :  " + field.getName());
+                try{
                 ((AbstractComponent)ReflectionUtils.getField( field, me )).load();
+                }catch(RuntimeException e){
+                    String msg = String.format("problems loading field [%s]", me.getClass().getName() + "#" + field.getName() );
+                    logger.info( msg, e );
+                    throw new RuntimeException(msg, e);
+                }
             }
         }, new ReflectionUtils.FieldFilter() {
                     @Override

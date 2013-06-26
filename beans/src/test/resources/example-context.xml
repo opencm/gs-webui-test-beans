@@ -12,8 +12,8 @@
     <bean id="executorFactory" class="webui.tests.exec.ExecutorFactory"/>
     <bean id="driverFactory" class="webui.tests.SeleniumDriverFactory" init-method="init" destroy-method="quit" >
          <property name="driverTypeString" value="#{systemProperties['selenium.browser']?: 'chrome'}"/>
-        <property name="driverType" value="CHROME_GWT_DEV"/>
-        <property name="rootUrl" value="http://localhost:8888/"/>
+        <property name="driverType" value="CHROME"/>
+        <property name="rootUrl" value="http://localhost:8099/"/>
 
     </bean>
 
@@ -28,6 +28,11 @@
         <property name="aboutText" value="cloudify"/>
         <property name="username" value="guy"/>
         <property name="password" value="guy"/>
+    </bean>
+
+    <bean id="recipesRepositoryTestConf" class="webui.tests.RecipesRepositoryTest$RecipesRepositoryTestConf">
+        <property name="progressConsoleText" value="Starting Non-Interactive Shell" />
+        <property name="progressDialogText" value="Recipe installation initiated successfully" />
     </bean>
 
     <context:component-scan base-package="webui.tests"/>

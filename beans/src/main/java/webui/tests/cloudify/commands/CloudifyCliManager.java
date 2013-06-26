@@ -2,7 +2,6 @@ package webui.tests.cloudify.commands;
 
 import org.apache.commons.collections.Closure;
 import org.apache.commons.exec.*;
-import org.apache.commons.exec.Executor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -11,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import webui.tests.exec.ExecutorFactory;
 import webui.tests.utils.CollectionUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

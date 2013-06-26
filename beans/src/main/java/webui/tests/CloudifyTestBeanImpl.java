@@ -3,7 +3,10 @@ package webui.tests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import webui.tests.cloudify.commands.*;
+import webui.tests.cloudify.commands.Bootstrap;
+import webui.tests.cloudify.commands.CloudifyCliManager;
+import webui.tests.cloudify.commands.Connect;
+import webui.tests.cloudify.commands.Teardown;
 
 /**
  * User: guym

@@ -81,6 +81,10 @@ public class LoginPage extends GsPage<ComplexLoginPage>{
         throw new RuntimeException( String.format( "no visible element from list %s", elements ) );
     }
 
+    public DashboardPage login() {
+        return login(null, null);
+    }
+
     public DashboardPage login( String username, String password ) {
           logger.info( String.format( "logging in with %s, %s", username, password ) );
 

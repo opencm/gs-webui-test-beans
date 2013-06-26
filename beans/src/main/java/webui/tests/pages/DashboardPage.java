@@ -15,6 +15,21 @@ import webui.tests.annotations.OnLoad;
 @Component
 public class DashboardPage extends GsPage<DashboardPage> {
 
+
+    @OnLoad
+    @FindBy(id = "gs-tab-item-recipes-button")
+    private WebElement recipesButton;
+
+    @Autowired
+    private RecipesRepositoryPage recipesRepositoryPage;
+
+    public RecipesRepositoryPage gotoRecipes() {
+        recipesButton.click();
+        recipesRepositoryPage.load();
+        return recipesRepositoryPage;
+    }
+
+
     @OnLoad
     @FindBy(css="#gs-about-button")
     private WebElement aboutButton;

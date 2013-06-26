@@ -1,6 +1,7 @@
 package webui.tests;
 
 import com.thoughtworks.selenium.Selenium;
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -30,7 +31,7 @@ public class SeleniumDriverFactory{
     private int retries;
 
 
-    private String chromeDriverPath = "classpath:webui/chromedriver_win_26.0.1383.0/chromedriver.exe";
+    private String chromeDriverPath = DefaultValues.get().getChromeDriverPath();
 
     private String gwtFirefoxDevXpi = "classpath:webui/gwt-dev-plugin-1-19-rc.xpi";
 
@@ -61,6 +62,7 @@ public class SeleniumDriverFactory{
     }
 
     public void initializeDriver() {
+
         switch ( driverType )
         {
             case SAFARI :
@@ -240,5 +242,34 @@ public class SeleniumDriverFactory{
 
     public void setGwtChromeDevCrx( String gwtChromeDevCrx ) {
         this.gwtChromeDevCrx = gwtChromeDevCrx;
+    }
+
+
+
+    public abstract static class DefaultValues{
+
+        abstract public String getChromeDriverPath();
+
+        static public DefaultValues get(){
+            DefaultValues res = new Windows();
+            if ( SystemUtils.IS_OS_LINUX ){
+                return new Linux();
+            }
+            logger.info("Using default values for OS [%s]", res.getClass().getSimpleName());
+            return res;
+        }
+
+        public static class Windows extends DefaultValues{
+            @Override
+            public String getChromeDriverPath() {
+                return "classpath:webui/chromedriver_win_26.0.1383.0/chromedriver.exe";
+            }
+        }
+        public static class Linux extends DefaultValues{
+            @Override
+            public String getChromeDriverPath() {
+                return "classpath:webui/chromedriver_linux_x64_v27-29";
+            }
+        }
     }
 }

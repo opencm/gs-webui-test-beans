@@ -1,13 +1,15 @@
 package webui.tests.pages;
 
 import com.thoughtworks.selenium.Selenium;
-import webui.tests.components.AbstractComponent;
-import webui.tests.utils.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import webui.tests.components.AbstractComponent;
+import webui.tests.utils.CollectionUtils;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -81,9 +83,5 @@ public abstract class GsPage<T extends GsPage> extends AbstractComponent<T> {
         }
         return (T) this;
     }
-
-
-
-
 
 }
