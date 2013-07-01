@@ -5,6 +5,8 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import webui.tests.components.AbstractComponent;
@@ -39,7 +41,7 @@ public abstract class GsPage<T extends GsPage> extends AbstractComponent<T> {
     }
 
     public Collection<WebElement> findDisplayed( By by ) {
-        List<WebElement> elements = webDriver.findElements( by );
+        List<WebElement> elements = new WebDriverWait(webDriver, 2).until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
         Collection<WebElement> displayElements = CollectionUtils.select( elements, new Predicate() {
             @Override
             public boolean evaluate( Object o ) {
