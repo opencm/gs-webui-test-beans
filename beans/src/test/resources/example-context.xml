@@ -32,7 +32,7 @@
 
     <bean id="recipesRepositoryTestConf" class="webui.tests.RecipesRepositoryTest$RecipesRepositoryTestConf">
         <property name="progressConsoleText" value="Starting Non-Interactive Shell" />
-        <property name="progressDialogText" value="Recipe installation initiated successfully" />
+        <property name="progressDialogText" value="Installation started" />
     </bean>
 
     <context:component-scan base-package="webui.tests"/>
