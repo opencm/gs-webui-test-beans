@@ -24,14 +24,14 @@ public class ApplicationsPage extends GsPage<ApplicationsPage> {
             "#gs-tab-item-topology-events-grid," +
             "#gs-tab-item-topology-events," +
             "#gs-tab-item-topology-recipes," +
-            "#gs-tab-item-topology-cli")
+            "#gs-tab-item-topology-progress")
     private AbstractComponent tabItem;
 */
 
-    @FindBy(css = "#gs-tab-item-topology-cli-toggler-button")
+    @FindBy(css = "#gs-tab-item-topology-progress-toggler-button")
     private WebElement installationProgressButton;
 
-    @FindBy(css = "#gs-tab-item-topology-cli")
+    @FindBy(css = "#gs-tab-item-topology-progress")
     private InstallationProgressTab installationProgressTab;
 
     public InstallationProgressTab installationProgress() {
@@ -41,10 +41,10 @@ public class ApplicationsPage extends GsPage<ApplicationsPage> {
 
     public static class InstallationProgressTab extends AbstractComponent<InstallationProgressTab> {
 
-        @FindBy(css = "#gs-tab-item-topology-cli .x-panel-header")
+        @FindBy(css = "#gs-tab-item-topology-progress .x-panel-header")
         public WebElement recipePath;
 
-        @FindBy(css = "#gs-tab-item-topology-cli pre")
+        @FindBy(css = "#gs-tab-item-topology-progress pre")
         public WebElement console;
 
     }
