@@ -120,6 +120,8 @@ public class GsLocators {
             logger.debug( "[{}] intercepted method [{}] on object [{}]. Will search for first displayed [{}]", new Object[]{field, method, o, firstDisplayed} );
             if ( o instanceof GsSeleniumComponent )
             {
+                // since we call "setWebElement" and "setWebDriver" from within THIS FUNCTION, we must not capture them
+                // to avoid infinite recursive loop
                 if ( !method.getName().equals( "setWebElement" ) && !method.getName().equals( "setWebDriver" ) )
                 {
                     GsSeleniumComponent comp = ( GsSeleniumComponent ) o;

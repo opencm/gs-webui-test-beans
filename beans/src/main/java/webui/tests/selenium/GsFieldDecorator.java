@@ -12,6 +12,7 @@ import org.openqa.selenium.support.pagefactory.FieldDecorator;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import webui.tests.components.Absolute;
 import webui.tests.components.FirstDisplayed;
 
 import java.lang.reflect.Field;
@@ -76,7 +77,11 @@ public class GsFieldDecorator implements FieldDecorator, ApplicationContextAware
     }
 
     private ElementLocator getLocator( Field field ) {
-        return new DefaultElementLocatorFactory( searchContext ).createLocator( field );
+        if ( field.isAnnotationPresent(Absolute.class)){
+            return new DefaultElementLocatorFactory( webDriver ).createLocator( field );
+        }else{
+            return new DefaultElementLocatorFactory( searchContext ).createLocator( field );
+        }
     }
 
     @Override

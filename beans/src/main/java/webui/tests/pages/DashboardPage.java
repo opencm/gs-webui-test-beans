@@ -20,8 +20,21 @@ public class DashboardPage extends GsPage<DashboardPage> {
     @FindBy(id = "gs-tab-item-recipes-button")
     private WebElement recipesButton;
 
+    @OnLoad
+    @FindBy(id = "gs-tab-item-topology-button")
+    private WebElement applicationsButton;
+
     @Autowired
     private RecipesRepositoryPage recipesRepositoryPage;
+
+    @Autowired
+    private ApplicationsPage applicationsPage;
+
+    public ApplicationsPage gotoApplications() {
+        applicationsButton.click();
+        applicationsPage.load();
+        return applicationsPage;
+    }
 
     public RecipesRepositoryPage gotoRecipes() {
         recipesButton.click();

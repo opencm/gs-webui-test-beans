@@ -24,7 +24,7 @@ public abstract class AbstractInnerTabs<T> extends AbstractComponent<AbstractInn
 
     // the currently displayed tab item
     @FirstDisplayed
-    @FindBy(css = "div[id^='gs-tab-item']")
+    @FindBy(css = ".gs-tab-item")
     private WebElement activeTab;
 
     /**

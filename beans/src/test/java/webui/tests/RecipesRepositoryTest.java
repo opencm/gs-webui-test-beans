@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import webui.tests.pages.*;
-import webui.tests.utils.CollectionUtils;
 
 /**
  * User: eliranm
@@ -51,21 +50,21 @@ public class RecipesRepositoryTest {
         logger.info( "install appclication test" );
         RecipesRepositoryPage recipesRepositoryPage = loginPage.gotoPage().login().gotoRecipes().applications().install("helloworld");
         Assert.assertTrue( String.format(
-                "expecting to see [%s] in popup with text [%s]", conf.progressDialogText, CollectionUtils.first(recipesRepositoryPage.findDisplayedWindowDialogs()).getText() ),
-                recipesRepositoryPage.isTextInPopup(conf.progressDialogText));
+                "expecting to see [%s] in popup with text [%s]", conf.progressDialogText, recipesRepositoryPage.findFirstDisplayedWindowDialog().getText() ),
+                recipesRepositoryPage.isTextInPopups(conf.progressDialogText));
     }
 
     @Test
     public void applicationInstallationProgressTest(){
         logger.info( "application installation progress test" );
         loginPage.gotoPage().login().gotoRecipes().applications().install("helloworld").closeDialog("yes");
-        ApplicationsPage.InstallationProgressTab installationProgressTab = applicationsPage.load().installationProgress();
+        applicationsPage.load().progressTab();
         Assert.assertTrue(
-                String.format("expecting recipe path [%s] to contain [%s]", installationProgressTab.recipePath.getText().toLowerCase(), "helloworld"),
-                installationProgressTab.recipePath.getText().toLowerCase().contains("helloworld"));
+                String.format("expecting recipe path [%s] to contain [%s]", applicationsPage.progressPath().toLowerCase(), "helloworld"),
+                applicationsPage.progressPath().toLowerCase().contains("helloworld"));
         Assert.assertTrue(
-                String.format("expecting console text [%s] to contain [%s]", installationProgressTab.console.getText(), conf.progressConsoleText),
-                installationProgressTab.console.getText().contains(conf.progressConsoleText));
+                String.format("expecting console text [%s] to contain [%s]", applicationsPage.progressText(), conf.progressConsoleText),
+                applicationsPage.progressText().contains(conf.progressConsoleText));
     }
 
     public static class RecipesRepositoryTestConf {

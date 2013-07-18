@@ -87,7 +87,7 @@ public class AbstractComponent<T extends AbstractComponent> implements GsSeleniu
     }
 
     public T load(){
-        return load( webElement );
+        return load( webElement == null ? webDriver : webElement );
     }
 
 

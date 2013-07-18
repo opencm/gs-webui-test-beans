@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public abstract class GsPage<T extends GsPage> extends AbstractComponent<T> {
 
-    @Autowired
+   @Autowired
     protected Selenium selenium;
 
     public boolean isTextPresent( String text ) {
@@ -34,6 +34,10 @@ public abstract class GsPage<T extends GsPage> extends AbstractComponent<T> {
     public GsPage<T> setSelenium( Selenium selenium ) {
         this.selenium = selenium;
         return this;
+    }
+
+    public WebElement findFirstDisplayedWindowDialog() {
+        return CollectionUtils.first(findDisplayedWindowDialogs());
     }
 
     public Collection<WebElement> findDisplayedWindowDialogs() {
@@ -57,7 +61,7 @@ public abstract class GsPage<T extends GsPage> extends AbstractComponent<T> {
     }
 
 
-    public boolean isTextInPopup( String containedText ) {
+    public boolean isTextInPopups(String containedText) {
         Collection<WebElement> popups = findDisplayedWindowDialogs();
         if ( !CollectionUtils.isEmpty( popups ) )
         {
@@ -74,7 +78,7 @@ public abstract class GsPage<T extends GsPage> extends AbstractComponent<T> {
     }
 
     public T closeDialog( String str ){
-        WebElement e = CollectionUtils.first( findDisplayedWindowDialogs() );
+        WebElement e = findFirstDisplayedWindowDialog();
         List<WebElement> buttons = e.findElements( By.cssSelector( "button" ) );
         for ( WebElement button  : buttons )
         {

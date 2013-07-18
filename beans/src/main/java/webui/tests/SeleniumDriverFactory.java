@@ -33,7 +33,7 @@ public class SeleniumDriverFactory{
 
     private String chromeDriverPath = DefaultValues.get().getChromeDriverPath();
 
-    private String gwtFirefoxDevXpi = "classpath:webui/gwt-dev-plugin-1-19-rc.xpi";
+    private String gwtFirefoxDevXpi = "classpath:webui/gwt-dev-plugin-1-22.xpi";
 
     private String gwtChromeDevCrx = "classpath:webui/chrome_gwt_1_0_11357.crx";
 
@@ -251,11 +251,15 @@ public class SeleniumDriverFactory{
         abstract public String getChromeDriverPath();
 
         static public DefaultValues get(){
-            DefaultValues res = new Windows();
+            DefaultValues res = null;
             if ( SystemUtils.IS_OS_LINUX ){
-                return new Linux();
+                res = new Linux();
+            } else if ( SystemUtils.IS_OS_WINDOWS ) {
+                res = new Windows();
             }
-            logger.info("Using default values for OS [%s]", res.getClass().getSimpleName());
+            if (res != null) {
+                logger.info("Using default values for OS [{}]", res.getClass().getSimpleName());
+            }
             return res;
         }
 
