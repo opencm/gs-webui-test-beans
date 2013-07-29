@@ -1,0 +1,6 @@
+[submodule "selenium-drivers"]
+	path = selenium-drivers
+	url = https://github.com/guy-mograbi-at-gigaspaces/selenium-drivers.git
+[submodule "beans/src/test/resources/selenium-drivers"]
+	path = beans/src/test/resources/selenium-drivers
+	url = https://github.com/guy-mograbi-at-gigaspaces/selenium-drivers.git
