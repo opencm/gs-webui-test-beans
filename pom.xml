@@ -23,6 +23,20 @@
                   <scope>test</scope>
         </dependency>
     </dependencies>
+    <distributionManagement>
+         	<downloadUrl>http://maven-repository.openspaces.org</downloadUrl>
+		<repository>
+			<id>org.openspaces</id>
+			<name>S3 Repository</name>
+			<url>s3://gigaspaces-maven-repository-eu</url>
+		</repository>
+		<snapshotRepository>
+			<id>org.openspaces</id>
+			<name>S3 Repository</name>
+			<url>s3://gigaspaces-maven-repository-eu</url>
+		</snapshotRepository>
+	</distributionManagement>
+
     <build>
         <plugins>
             <plugin>
